@@ -46,3 +46,16 @@ $ ./main [threshold] [Input Filename]
 
 The threshold value should be between 0-255.  This will
 output files with "_sobel_x", "_sobel_y", etc. for each step.
+
+## 3) Gaussian Pyramids
+
+To build the solution to this problem, type `make`.
+To run the solution, use the following command:
+
+```
+$ ./main [sigma] [levels] [steps] [Input Filename]
+```
+
+Levels and Steps should be integers.  This will output files
+with level an step information in the filename, (similar to 
+"_L0_S1") for each step.
