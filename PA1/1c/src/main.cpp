@@ -17,7 +17,7 @@ int main(int argc, const char * argv[])
     double sigma;
     string filename;
 
-    if( argc < 3 or argc > 3 )
+    if( argc < 3 || argc > 3 )
     {
         cout << "Usage: main [sigma value] [filename]" << endl;
         return 1;

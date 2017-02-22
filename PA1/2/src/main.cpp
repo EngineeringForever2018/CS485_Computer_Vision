@@ -14,23 +14,21 @@ using namespace std;
 
 int main(int argc, const char * argv[])
 {    
-    double sigma;
+    int threshold;
     string filename;
 
     if( argc < 3 || argc > 3 )
     {
-        cout << "Usage: main [sigma value] [filename]" << endl;
+        cout << "Usage: main [threshold:0-255] [filename]" << endl;
         return 1;
     }
 
-    sigma = atof( argv[1] );
+    threshold = atoi( argv[1] );
     filename = argv[2];
 
-    filename = filename.substr(0, filename.size() - 4);
-
-    PGM gauss( filename + ".pgm" );
-    gauss.gaussian2D( sigma, 5 * sigma );
-    gauss.writeFile( filename + "_2D_" + to_string( int(sigma) ) + ".pgm" );
+    PGM thresh( filename );
+    
+    thresh.sobel( threshold );
 
     return 0;
 }
