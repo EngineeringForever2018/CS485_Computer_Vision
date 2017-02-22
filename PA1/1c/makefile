@@ -15,7 +15,7 @@ $(TARGET): $(OBJECTS)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $< $(INC)
 
 clean:
-	$(RM) -r $(BUILDDIR) $(TARGET) *.csv
+	$(RM) -r $(BUILDDIR) $(TARGET) lenna_*
