@@ -15,7 +15,7 @@ vector<double> gaussianMask( const double sigma, const int size )
 		mask.push_back( 0 );
 	}
 
-	for( int i = -1 * (size - 1) / 2; i < size / 2; i++ )
+	for( int i = -1 * (size - 1) / 2; i <= (size - 1) / 2; i++ )
 	{
 		mask[i + (size - 1)/2] = coef * exp( e_coef * i*i );
 	}

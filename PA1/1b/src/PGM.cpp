@@ -186,7 +186,7 @@ bool PGM::gaussian1D( const double sigma, const int maskSize )
     double* mask = new double[maskSize];
     double sum;
     
-    for( int i = -1 * (maskSize - 1) / 2; i < maskSize; i++ )
+    for( int i = -1 * (maskSize - 1) / 2; i <= (maskSize - 1) / 2; i++ )
     {
         mask[i + (maskSize - 1)/2] = coef * exp( e_coef * ( i*i ) );
     }
@@ -222,9 +222,9 @@ bool PGM::gaussian2D( const double sigma, const int maskSize )
         mask[i] = new double[maskSize];
     }
     
-    for( int i = -1 * (maskSize - 1) / 2; i < (maskSize - 1) / 2; i++ )
+    for( int i = -1 * (maskSize - 1) / 2; i <= (maskSize - 1) / 2; i++ )
     {
-        for( int j = -1 * (maskSize - 1) / 2; j < (maskSize - 1) / 2; j++ )
+        for( int j = -1 * (maskSize - 1) / 2; j <= (maskSize - 1) / 2; j++ )
         {
             mask[i + (maskSize-1)/2][j + (maskSize-1)/2] = coef * exp( e_coef * ( i*i + j*j ) );
         }
