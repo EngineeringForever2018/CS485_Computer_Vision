@@ -16,6 +16,11 @@
 #include <cmath>
 using namespace std;
 
+uint8_t map(uint8_t x, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t out_max)
+{
+  return (uint8_t) (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 PGM::PGM( )
 {
     
@@ -169,13 +174,13 @@ bool PGM::normalize( )
         }
     }
     
-    double mult = double(depth - 0) / double( max - min );
+//    double mult = double(depth - 0) / double( max - min );
     
     for( int i = 0; i < width; i++ )
     {
         for( int j = 0; j < height; j++ )
         {
-            image[i][j] = (int) ( ( image[i][j] - min ) * mult );
+            image[i][j] = map( image[i][j], min, max, 0, depth);
         }
     }
     
@@ -280,6 +285,9 @@ bool PGM::sobel( const int threshold )
     
     x_sobel.apply2DMask( x_mask, 3 );
     y_sobel.apply2DMask( y_mask, 3 );
+
+    x_sobel.normalize( );
+    y_sobel.normalize( );
     
     x_sobel.writeFile( fname + "_sobel_x.pgm" );
     y_sobel.writeFile( fname + "_sobel_y.pgm" );
