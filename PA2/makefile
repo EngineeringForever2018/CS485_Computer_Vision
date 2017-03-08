@@ -1,6 +1,6 @@
-CC = g++
+CC = clang++
 SRCDIR := src
-BUILDDIR := build
+BUILDDIR := ./build
 TARGET := ./main
 
 SRCEXT := cpp
@@ -11,11 +11,11 @@ LIB :=
 INC := -I include
 
 $(TARGET): $(OBJECTS)
-	$(CC) $^ -o $(TARGET) $(LIB)
+	$(CC) $^ -o $(TARGET) $(LIB) 
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
 	$(CC) $(CFLAGS) -c -o $@ $< $(INC)
 
 clean:
-	$(RM) -r $(BUILDDIR) $(TARGET) lenna_* sf_*
+	$(RM) -r $(BUILDDIR) $(TARGET)
