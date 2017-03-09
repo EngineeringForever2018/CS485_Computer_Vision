@@ -1,10 +1,8 @@
-//
-//  PGM.cpp
-//  CS485_PA01
-//
-//  Created by Evan Grill on 2/12/17.
-//  Copyright © 2017 Evan Grill. All rights reserved.
-//
+/********************************************
+ *	PA2 - Affine Transforms
+ *	Evan Grill, March 9, 2017
+ *  PGM.cpp: Implements PGM class.
+ ********************************************/
 
 #include "PGM.hpp"
 #include <iostream>
@@ -15,11 +13,6 @@
 #include <algorithm>
 #include <cmath>
 using namespace std;
-
-uint8_t map(uint8_t x, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t out_max)
-{
-  return (uint8_t) (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
 
 PGM::PGM( )
 {
@@ -174,13 +167,13 @@ bool PGM::normalize( )
         }
     }
     
-//    double mult = double(depth - 0) / double( max - min );
+    double mult = double(depth - 0) / double( max - min );
     
     for( int i = 0; i < width; i++ )
     {
         for( int j = 0; j < height; j++ )
         {
-            image[i][j] = map( image[i][j], min, max, 0, depth);
+            image[i][j] = (int) ( ( image[i][j] - min ) * mult );
         }
     }
     
@@ -389,6 +382,11 @@ int PGM::getDepth()
     return depth;
 }
 
+string PGM::getFilename( )
+{
+    return fname;
+}
+
 bool PGM::apply1DMask( double* mask, const int size )
 {
     int x_ind, y_ind;
@@ -507,6 +505,90 @@ bool PGM::apply2DMask( double** mask, const int size )
         }
     }
     
+    for( int i = 0; i < width; i++ )
+    {
+        delete image[i];
+    }
+    
+    delete image;
+    
+    image = newImage;
+    
+    return true;
+}
+
+bool PGM::affineTransform( const Matrix& A )
+{
+    int x_f, y_f;
+    uint8_t** newImage = new uint8_t*[width];
+    for( int i = 0; i < width; i++ )
+    {
+        newImage[i] = new uint8_t[height];
+    }
+
+    Matrix O;
+    Matrix X( 3, 1 );
+
+    for( int i = 0; i < width; i++ )
+    {
+        for( int j = 0; j < height; j++ )
+        {
+            X.setValue( 0, 0, i );
+            X.setValue( 1, 0, j );
+            X.setValue( 2, 0, 1 );
+            O = multiplyMatrix( A, X );
+            x_f = (int) ( O.getValue( 0, 0 ) );
+            y_f = (int) ( O.getValue( 1, 0 ) );
+            if ( x_f >= 0 && x_f < width &&
+                 y_f >= 0 && y_f < height )
+            {
+                newImage[x_f][y_f] = image[i][j];
+            }
+        }
+    }
+
+    for( int i = 0; i < width; i++ )
+    {
+        delete image[i];
+    }
+    
+    delete image;
+    
+    image = newImage;
+
+    return true;
+}
+
+bool PGM::affineTransform( const Matrix& A, const Matrix& B )
+{
+    int x_f, y_f;
+    uint8_t** newImage = new uint8_t*[width];
+    for( int i = 0; i < width; i++ )
+    {
+        newImage[i] = new uint8_t[height];
+    }
+
+    Matrix O;
+    Matrix X( 2, 1 );
+
+    for( int i = 0; i < width; i++ )
+    {
+        for( int j = 0; j < height; j++ )
+        {
+            X.setValue( 0, 0, i );
+            X.setValue( 1, 0, j );
+            O = addMatrix( multiplyMatrix( A, X ), B );
+            x_f = (int) round( O.getValue( 0, 0 ) );
+            y_f = (int) round( O.getValue( 1, 0 ) );
+            if ( x_f >= 0 && x_f < width &&
+                 y_f >= 0 && y_f < height )
+            {
+                newImage[x_f][y_f] = image[i][j];
+                //printf( "(%d, %d) -> (%d, %d)\n", i, j, x_f, y_f );
+            }
+        }
+    }
+
     for( int i = 0; i < width; i++ )
     {
         delete image[i];
