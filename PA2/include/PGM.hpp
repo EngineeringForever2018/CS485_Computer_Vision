@@ -1,10 +1,8 @@
-//
-//  PGM.hpp
-//  CS485_PA02
-//
-//  Created by Evan Grill on 2/12/17.
-//  Copyright © 2017 Evan Grill. All rights reserved.
-//
+/********************************************
+ *	PA2 - Affine Transforms
+ *	Evan Grill, March 9, 2017
+ *  PGM.hpp: Defines PGM class.
+ ********************************************/
 
 #pragma once
 

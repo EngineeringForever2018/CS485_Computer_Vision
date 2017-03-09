@@ -1,3 +1,9 @@
+/********************************************
+ *	PA2 - Affine Transforms
+ *	Evan Grill, March 9, 2017
+ *  Main.cpp: Drives program.
+ ********************************************/
+
 #include <cstdint>
 #include <iostream>
 #include <sstream>
@@ -78,7 +84,6 @@ int main( int argc, const char** argv )
 		Bx.setValue( 2, 0, NTx ); By.setValue( 2, 0, NTy );
 		Bx.setValue( 3, 0, MCx ); By.setValue( 3, 0, MCy );
 
-
 	while( getline( images, readLine ) )
 	{
 		ReadLine( readLine, readFilename, LEx, LEy, REx, REy, NTx, NTy, MCx, MCy );
@@ -94,7 +99,6 @@ int main( int argc, const char** argv )
 		solve_system( 4, 3, A0, X0, Bx0 );
 		solve_system( 4, 3, A0, Y0, By0 );
 
-//		Matrix Affine( 2, 2 );
 		Matrix Affine( 3, 3 );
 		Affine.setValue( 0, 0, X0[1] ); 
 		Affine.setValue( 0, 1, X0[2] );
@@ -106,24 +110,8 @@ int main( int argc, const char** argv )
 		Affine.setValue( 2, 1, 0 );
 		Affine.setValue( 2, 2, 1 );
 
-//		Affine.print();
-//		cout << endl;
-
-/*		Matrix Affine( 3, 2 );
-		Affine.setValue( 0, 0, X0[1] ); 
-		Affine.setValue( 1, 0, X0[2] );
-		Affine.setValue( 2, 0, X0[3] );
-		Affine.setValue( 0, 1, Y0[1] ); 
-		Affine.setValue( 1, 1, Y0[2] );
-		Affine.setValue( 2, 1, Y0[3] );
-*/
-	//	Matrix Translate( 2, 1 );
-	//	Translate.setValue( 0, 0, X0[3] );
-	//	Translate.setValue( 1, 0, Y0[3] );
-
 		PGM image( readFilename );
 		image.affineTransform( Affine );
-	//	image.affineTransform( Affine, Translate );
 		image.normalize( );
 		image.writeFile( readFilename.substr( 0, readFilename.size( ) - 4 ) + "_t.pgm" );
 	}

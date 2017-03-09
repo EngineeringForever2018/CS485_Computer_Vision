@@ -1,10 +1,8 @@
-//
-//  PGM.cpp
-//  CS485_PA01
-//
-//  Created by Evan Grill on 2/12/17.
-//  Copyright © 2017 Evan Grill. All rights reserved.
-//
+/********************************************
+ *	PA2 - Affine Transforms
+ *	Evan Grill, March 9, 2017
+ *  PGM.cpp: Implements PGM class.
+ ********************************************/
 
 #include "PGM.hpp"
 #include <iostream>
@@ -545,7 +543,6 @@ bool PGM::affineTransform( const Matrix& A )
                  y_f >= 0 && y_f < height )
             {
                 newImage[x_f][y_f] = image[i][j];
-           //   printf( "(%d, %d) -> (%d, %d)\n", i, j, x_f, y_f );
             }
         }
     }
@@ -558,7 +555,7 @@ bool PGM::affineTransform( const Matrix& A )
     delete image;
     
     image = newImage;
-    
+
     return true;
 }
 
@@ -580,8 +577,7 @@ bool PGM::affineTransform( const Matrix& A, const Matrix& B )
         {
             X.setValue( 0, 0, i );
             X.setValue( 1, 0, j );
-            O = multiplyMatrix( A, X );
-            O = addMatrix( O, B );
+            O = addMatrix( multiplyMatrix( A, X ), B );
             x_f = (int) round( O.getValue( 0, 0 ) );
             y_f = (int) round( O.getValue( 1, 0 ) );
             if ( x_f >= 0 && x_f < width &&

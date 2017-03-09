@@ -1,3 +1,8 @@
+/********************************************
+ *	PA2 - Affine Transforms
+ *	Evan Grill, March 9, 2017
+ *  Matrix.hpp: Declares Matrix class.
+ ********************************************/
 #pragma once
 
 #include <cstdint>

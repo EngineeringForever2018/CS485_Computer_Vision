@@ -1,3 +1,9 @@
+/********************************************
+ *	PA2 - Affine Transforms
+ *	Evan Grill, March 9, 2017
+ *  Matrix.cpp: Implements Matrix class.
+ ********************************************/
+
 #include <cstdint>
 #include <iostream>
 #include <cmath>
