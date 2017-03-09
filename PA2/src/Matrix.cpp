@@ -35,6 +35,43 @@ Matrix::Matrix( const Matrix& copyFrom )
 	}
 }
 
+Matrix::Matrix( const float** copyFrom, const int& rows, const int& cols )
+{
+	m = rows;
+	n = cols;
+	mat = new double*[m];
+	for( int i = 0; i < m; i++ )
+	{
+		mat[i] = new double[n];
+	}
+	
+	for( int i = 0; i < m; i++ )
+	{
+		for( int j = 0; j < n; j++ )
+		{
+			mat[i][j] = copyFrom[i][j];
+		}
+	}
+	
+}
+
+Matrix::Matrix( const float* copyFrom, const int& rows )
+{
+	m = rows;
+	n = 1;
+	mat = new double*[m];
+	for( int i = 0; i < m; i++ )
+	{
+		mat[i] = new double[n];
+	}
+	
+	for( int i = 0; i < m; i++ )
+	{
+			mat[i][0] = copyFrom[i];
+	}
+	
+}
+
 Matrix::~Matrix( )
 {
 	for( int i = 0; i < m; i++ )
@@ -62,7 +99,7 @@ const bool Matrix::isSquare( ) const
 
 bool Matrix::setValue( uint8_t row, uint8_t col, double value )
 {
-	if ( row > m || col > n )
+	if ( row >= m || col >= n )
 	{
 		return false;
 	}
@@ -72,7 +109,7 @@ bool Matrix::setValue( uint8_t row, uint8_t col, double value )
 
 double Matrix::getValue( uint8_t row, uint8_t col ) const
 {
-	if( row > m || col > n )
+	if( row >= m || col >= n )
 	{
 		return nan( "" ); 
 	}
@@ -80,7 +117,7 @@ double Matrix::getValue( uint8_t row, uint8_t col ) const
 	return mat[row][col];
 }
 
-void Matrix::print( )
+void Matrix::print( ) const
 {
 	for( int i = 0; i < m; i++ )
 	{
@@ -439,4 +476,54 @@ const bool Matrix::isOrthogonal( ) const
 	}
 	
 	return multiplyMatrix( A, transposeMatrix( A ) ) == identityMatrix( A.rows( ) );
+}
+
+float** Matrix::solvableMatrix( )
+{
+	float** C = new float*[m+1];
+	for( int i = 0; i < m+1; i++ )
+	{
+		C[i] = new float[n+1];
+	}
+
+	for( int i = 0; i < m; i++ )
+	{
+		for( int j = 0; j < n; j++ )
+		{
+			C[i+1][j+1] = mat[i][j];
+		}
+	}
+	return C;
+}
+
+float* Matrix::solvableVector( )
+{
+	float* C;
+
+	if( m > 1 && n > 1 )
+	{
+		return NULL;
+	}
+
+	if( m > 1 )
+	{
+		C = new float[m+1];
+		for( int i = 0; i < m; i++ )
+		{
+			C[i+1] = mat[i][0];
+		}
+		return C;
+	}
+
+	if( n > 1 )
+	{
+		C = new float[n+1];
+		for( int i = 0; i < m; i++ )
+		{
+			C[i+1] = mat[0][i];
+		}
+		return C;
+	}
+
+	return NULL;
 }

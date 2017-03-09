@@ -8,6 +8,8 @@ class Matrix
 public:
 	Matrix( uint8_t rows = 2, uint8_t cols = 2 );
 	Matrix( const Matrix &copyFrom );
+	Matrix( const float** copyFrom, const int& rows, const int& cols );
+	Matrix( const float* copyFrom, const int& rows );
 	~Matrix( );
 
 	const uint8_t rows( ) const;
@@ -17,7 +19,11 @@ public:
 
 	bool setValue( uint8_t row, uint8_t col, double value );
 	double getValue( uint8_t row, uint8_t col ) const;
-	void print( );
+
+	float** solvableMatrix( );
+	float* solvableVector( );
+
+	void print( ) const;
 
 	friend Matrix addMatrix( const Matrix& A, const Matrix& B );
 	friend Matrix multiplyMatrix( const Matrix& A, const Matrix& B );

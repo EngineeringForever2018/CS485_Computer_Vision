@@ -12,6 +12,8 @@
 #include <vector>
 using namespace std;
 
+#include "Matrix.hpp"
+
 class PGM
 {
 public:
@@ -34,6 +36,8 @@ public:
     bool apply2DMask( double** mask, const int size );
     
     bool threshold( const int level );
+    bool affineTransform( const Matrix& A );
+    bool affineTransform( const Matrix& A, const Matrix& B );
     
     int getWidth( );
     int getHeight( );

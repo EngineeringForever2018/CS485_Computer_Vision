@@ -6,7 +6,7 @@ TARGET := ./main
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-CFLAGS := -Wall -std=c++11
+CFLAGS := -Wall -std=c++11 -g
 LIB :=
 INC := -I include
 
@@ -18,4 +18,4 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	$(CC) $(CFLAGS) -c -o $@ $< $(INC)
 
 clean:
-	$(RM) -r $(BUILDDIR) $(TARGET)
+	$(RM) -r $(BUILDDIR) $(TARGET) ./test/*_t.pgm

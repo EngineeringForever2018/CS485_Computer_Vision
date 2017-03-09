@@ -518,3 +518,89 @@ bool PGM::apply2DMask( double** mask, const int size )
     
     return true;
 }
+
+bool PGM::affineTransform( const Matrix& A )
+{
+    int x_f, y_f;
+    uint8_t** newImage = new uint8_t*[width];
+    for( int i = 0; i < width; i++ )
+    {
+        newImage[i] = new uint8_t[height];
+    }
+
+    Matrix O;
+    Matrix X( 3, 1 );
+
+    for( int i = 0; i < width; i++ )
+    {
+        for( int j = 0; j < height; j++ )
+        {
+            X.setValue( 0, 0, i );
+            X.setValue( 1, 0, j );
+            X.setValue( 2, 0, 1 );
+            O = multiplyMatrix( A, X );
+            x_f = (int) ( O.getValue( 0, 0 ) );
+            y_f = (int) ( O.getValue( 1, 0 ) );
+            if ( x_f >= 0 && x_f < width &&
+                 y_f >= 0 && y_f < height )
+            {
+                newImage[x_f][y_f] = image[i][j];
+           //   printf( "(%d, %d) -> (%d, %d)\n", i, j, x_f, y_f );
+            }
+        }
+    }
+
+    for( int i = 0; i < width; i++ )
+    {
+        delete image[i];
+    }
+    
+    delete image;
+    
+    image = newImage;
+    
+    return true;
+}
+
+bool PGM::affineTransform( const Matrix& A, const Matrix& B )
+{
+    int x_f, y_f;
+    uint8_t** newImage = new uint8_t*[width];
+    for( int i = 0; i < width; i++ )
+    {
+        newImage[i] = new uint8_t[height];
+    }
+
+    Matrix O;
+    Matrix X( 2, 1 );
+
+    for( int i = 0; i < width; i++ )
+    {
+        for( int j = 0; j < height; j++ )
+        {
+            X.setValue( 0, 0, i );
+            X.setValue( 1, 0, j );
+            O = multiplyMatrix( A, X );
+            O = addMatrix( O, B );
+            x_f = (int) round( O.getValue( 0, 0 ) );
+            y_f = (int) round( O.getValue( 1, 0 ) );
+            if ( x_f >= 0 && x_f < width &&
+                 y_f >= 0 && y_f < height )
+            {
+                newImage[x_f][y_f] = image[i][j];
+                //printf( "(%d, %d) -> (%d, %d)\n", i, j, x_f, y_f );
+            }
+        }
+    }
+
+    for( int i = 0; i < width; i++ )
+    {
+        delete image[i];
+    }
+    
+    delete image;
+    
+    image = newImage;
+    
+    return true;
+}
