@@ -354,7 +354,7 @@ bool PGM::threshold( const int level )
             }
             else
             {
-                image[i][j] = 255;
+                image[i][j] = depth;
             }
         }
     }
@@ -657,23 +657,25 @@ bool PGM::drawCircle( const int x, const int y, const int radius, const int thic
     return true;
 }
 
-bool PGM::detectCircle( int size, int threshold )
+bool PGM::detectCircle( int size, int edge_threshold, int max_circles )
 {
     PGM work( *this );
     int pX, pY;
     int circles = 0;
     cout << "Performing Edge Detection: ";
     work.gaussian1D( 1, 5 );
-    work.sobel( threshold );
+    work.sobel( edge_threshold );
     cout << "COMPLETE" << endl;
     cout << "Creating Vote Matrix: ";
-    int*** votes = new int**[height];
+    vector<vector<vector<int>>> votes;
     for( int i = 0; i < height; i++ )
     {
-        votes[i] = new int*[width];
+        vector<vector<int>> temp;
+        votes.push_back( temp );
         for( int j = 0; j < width; j++ )
         {
-            votes[i][j] = new int[size];
+            vector<int> temp2;
+            votes[i].push_back( temp2 );
         }
     }
     
@@ -683,7 +685,7 @@ bool PGM::detectCircle( int size, int threshold )
         {
             for( int k = 0; k < size; k++ )
             {
-                votes[i][j][k] = 0;
+                votes[i][j].push_back( 0 );
             }
         }
     }
@@ -693,18 +695,18 @@ bool PGM::detectCircle( int size, int threshold )
     {
         for( int j = 0; j < width; j++ )
         {
-            for( int t = 0; t < 360; t++ )
+            if( work.image[i][j] == depth )
             {
-                for( int r = (int) (size * .30); r < size; r++ )
+                for( int t = 0; t < 360; t++ )
                 {
-                    pX = ( i + r * cos( t * PI / 180 ) );
-                    pY = ( j + r * sin( t * PI / 180 ) );
-                    if( pX >= 0 && pX < height &&
-                        pY >= 0 && pY < width )
+                    for( int r = (int) (size * .10); r < size; r++ )
                     {
-                        if( work.image[pX][pY] == 255 )
+                        pX = ( i + r * cos( t * PI / 180 ) );
+                        pY = ( j + r * sin( t * PI / 180 ) );
+                        if( pX >= 0 && pX < height &&
+                            pY >= 0 && pY < width )
                         {
-                                votes[i][j][r]++;
+                            votes[pX][pY][r]++;
                         }
                     }
                 }
@@ -712,32 +714,61 @@ bool PGM::detectCircle( int size, int threshold )
         }
     }
     cout << "COMPLETE" << endl;
+
+     
+    vector<int> max_votes;
     cout << "Drawing Circles: ";
+    for( int i = 0; i < height; i++ )
+    {
+        for( int j = 0; j < width; j++ )
+        {
+            for( int k = (int) (size * .10); k < size; k++ )
+            {
+                if( max_votes.size( ) < max_circles )
+                {
+                    max_votes.push_back( votes[i][j][k] );
+                }
+                else if( votes[i][j][k] > max_votes[distance(max_votes.begin( ), min_element( max_votes.begin( ), max_votes.end( ) ) )] )
+                {
+                    max_votes.push_back( votes[i][j][k] );
+                    max_votes.erase( min_element( max_votes.begin( ), max_votes.end( ) ) );
+                }
+                //if( votes[i][j][k] >= vote_threshold )
+                //{
+                //    this->drawCircle( i, j, k, 3 );
+                //    circles++;
+                //}
+
+            }
+        }
+    }
     for( int i = 0; i < height; i++ )
     {
         for( int j = 0; j < width; j++ )
         {
             for( int k = 0; k < size; k++ )
             {
-                if( votes[i][j][k] >= 125 )
+                for( int l = 0; l < max_votes.size( ); l++ )
                 {
-                    this->drawCircle( i, j, k, 3 );
-                    circles++;
+                    if( votes[i][j][k] == max_votes[l] )
+                    {
+                        this->drawCircle( i, j, k, 3 );
+                    }
                 }
             }
         }
     }
     cout << "COMPLETE" << endl;
     cout << "Deallocating Vote Matrix: ";
-    for( int i = 0; i < height; i++ )
-    {
-        for( int j = 0; j < width; j++ )
-        {
-            delete[] votes[i][j];
-        }
-        delete[] votes[i];
-    }
-    delete[] votes;
+//    for( int i = 0; i < height; i++ )
+//    {
+//        for( int j = 0; j < width; j++ )
+//        {
+//            delete[] votes[i][j];
+//        }
+//        delete[] votes[i];
+//    }
+//    delete[] votes;
     cout << "COMPLETE" << endl;
     return ( circles > 0 );
 }

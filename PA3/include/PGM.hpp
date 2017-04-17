@@ -38,7 +38,7 @@ public:
     bool affineTransform( const Matrix& A );
     bool affineTransform( const Matrix& A, const Matrix& B );
 
-    bool detectCircle( int size = 30, int threshold = 175 );
+    bool detectCircle( int size = 100, int edge_threshold = 175, int max_circles = 5);
 
     bool drawCircle( const int x, const int y, const int radius, const int thickness, bool filled = false );
     

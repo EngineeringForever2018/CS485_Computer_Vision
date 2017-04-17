@@ -24,7 +24,10 @@ int main( int argc, const char** argv )
 	string input = argv[1];
 	string output = argv[2];
 	PGM test( input );
-	test.detectCircle( 100, 175 );
+//	PGM test2( test );
+//	test2.sobel( 200 );
+//	test2.writeFile( output );
+	test.detectCircle( 200, 125, 30);
 	test.writeFile( output );
 	return 0;
 }
