@@ -699,7 +699,7 @@ bool PGM::detectCircle( int size, int edge_threshold, int max_circles )
             {
                 for( int t = 0; t < 360; t++ )
                 {
-                    for( int r = (int) (size * .10); r < size; r++ )
+                    for( int r = (int) (size * .35); r < size; r++ )
                     {
                         pX = ( i + r * cos( t * PI / 180 ) );
                         pY = ( j + r * sin( t * PI / 180 ) );

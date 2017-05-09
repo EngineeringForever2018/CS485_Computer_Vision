@@ -16,18 +16,18 @@ using namespace std;
 
 int main( int argc, const char** argv )
 {
-	if( argc < 3 )
+	if( argc < 6 )
 	{
-		cout << "Usage: main [input filename] [output filename]" << endl;
+		cout << "Usage: main [max radius] [sobel threshold] [max # circles] [input filename] [output filename]" << endl;
 		return 1;
 	}
-	string input = argv[1];
-	string output = argv[2];
+	string input = argv[4];
+	string output = argv[5];
+	int max_radius = atoi( argv[1] );
+	int threshold = atoi( argv[2] );
+	int max_circles = atoi( argv[3] );
 	PGM test( input );
-//	PGM test2( test );
-//	test2.sobel( 200 );
-//	test2.writeFile( output );
-	test.detectCircle( 200, 125, 30);
+	test.detectCircle( max_radius, threshold, max_circles );
 	test.writeFile( output );
 	return 0;
 }
